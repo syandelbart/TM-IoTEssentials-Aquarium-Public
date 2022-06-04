@@ -20,18 +20,18 @@ import requests
 import os.path
 
 GPIO.setmode(GPIO.BCM)
-ULTR_TRIG_PORT = 5      #Ultrasonische trigger poort
-ULTR_ECHO_PORT = 6      #Ultrasonische echo poort
+ULTR_TRIG_PORT = 5      #Ultrasonic trigger port
+ULTR_ECHO_PORT = 6      #Ultrasonic echo port
 
 RELAY_PORT_1 = 26       #Relay port 1 = LAMP
 RELAY_PORT_2 = 19       #Relay port 2 = POMP
 
-MOTOR_PORT_IN1 = 21     #Motor poorten in
+MOTOR_PORT_IN1 = 21     #Motor ports in
 MOTOR_PORT_IN2 = 20
 MOTOR_PORT_IN3 = 16
 MOTOR_PORT_IN4 = 12
 
-BUTTON_1 = 14      #Button ports van links naar rechts op het breadboard
+BUTTON_1 = 14      #Button ports from left to right on breadboard
 BUTTON_2 = 15
 BUTTON_3 = 18
 BUTTON_4 = 4
@@ -40,18 +40,18 @@ url = "UBEAC_URL"
 uid = "USER_ID"
 
 
-GPIO.setup(ULTR_TRIG_PORT,GPIO.OUT)     #Trigger port moet outputten -> sturen van geluid
-GPIO.setup(ULTR_ECHO_PORT,GPIO.IN)      #Echo port moet inputten -> ontvangen van geluid
+GPIO.setup(ULTR_TRIG_PORT,GPIO.OUT)     #Trigger port has to output -> send sound
+GPIO.setup(ULTR_ECHO_PORT,GPIO.IN)      #Echo port must input -> receive sound
 
-GPIO.setup(RELAY_PORT_1,GPIO.OUT)       #Relay port 1 moet outputten -> sturen van aan/uit signaal
-GPIO.setup(RELAY_PORT_2,GPIO.OUT)       #Relay port 2 moet outputten -> sturen van aan/uit signaal
+GPIO.setup(RELAY_PORT_1,GPIO.OUT)       #Relay port 1 has to output -> send on/off signal
+GPIO.setup(RELAY_PORT_2,GPIO.OUT)       #Relay port 2 has to output -> send on/off signal
 
-GPIO.setup( MOTOR_PORT_IN1, GPIO.OUT )  #Alle pinnen van de motor als output instellen
+GPIO.setup( MOTOR_PORT_IN1, GPIO.OUT )  #All pins of motor as output
 GPIO.setup( MOTOR_PORT_IN2, GPIO.OUT )
 GPIO.setup( MOTOR_PORT_IN3, GPIO.OUT )
 GPIO.setup( MOTOR_PORT_IN4, GPIO.OUT )
 
-GPIO.setup( BUTTON_1, GPIO.IN )  #Alle pinnen van de buttons als input instellen
+GPIO.setup( BUTTON_1, GPIO.IN )  #All pins of the buttons as input
 GPIO.setup( BUTTON_2, GPIO.IN )
 GPIO.setup( BUTTON_3, GPIO.IN )
 GPIO.setup( BUTTON_4, GPIO.IN )
@@ -60,10 +60,10 @@ GPIO.setup( BUTTON_4, GPIO.IN )
 
 
 #SETUP LCD ---------------------------------------------------------------------------------------------------
-# Initialize SPI bus
+#Initialize SPI bus
 spi = busio.SPI(board.SCK, MOSI=board.MOSI, MISO=board.MISO)
 
-# Initialize display - overgenomen...
+#Initialize display
 dc = digitalio.DigitalInOut(board.D23)  # data/command
 cs1 = digitalio.DigitalInOut(board.CE1)  # chip select CE1 for display
 reset = digitalio.DigitalInOut(board.D24)  # reset
@@ -72,21 +72,21 @@ display.bias = 4
 display.contrast = 60
 display.invert = True
 
-#  Display "legen"
+#Empty display
 display.fill(0)
 display.show()
 
-# Tekenobject aanmaken voor schrijven op display
+#Creating drawing object to draw on the screen
 image = Image.new('1', (display.width, display.height)) 
 draw = ImageDraw.Draw(image)
  	
 
-#tekstgrootte definieren en symbolattf voor emoji support toevoegen
+#Define font size and add local font (Symbola.ttf) for emoji support
 font_size = 12
 unicode_font = ImageFont.truetype("Symbola.ttf", font_size)
 
 
-#Scherm leegmaken -> anders alles zwart
+#Clean screen -> black to white
 draw.rectangle((0, 0, display.width, display.height), outline=255, fill=255)
 
 #END SETUP LCD ---------------------------------------------------------------------------------------------------
@@ -132,7 +132,7 @@ display.image(image)
 
 display.show()
 
-# getekende image weghalen (=rij leegmaken) & nieuwe lijn tekenen
+# Remove drawn image (= emtpy row) & create new line
 def drawRow(row,value):
     draw.rectangle((1, row*font_size, display.width, (row + 1)*font_size), outline=255, fill=255)
     draw.text((1,row*font_size), value, font=unicode_font)
@@ -148,7 +148,7 @@ def getCurrentTime():
 
 
 
-#Ultrasonische sensor lezing
+#Ultrasonic reading
 def getUltrasonicReadings():
     GPIO.output(ULTR_TRIG_PORT,0)
     time.sleep(1)
@@ -260,9 +260,9 @@ def getButtonPresses():
     PREV_PUMP_STATE = False
     
     while True:
-        #Check of knop is ingedrukt
+        #Check if button is pressed
         if GPIO.input(BUTTON_1) == 0:
-            #Als knop nog niet is aan het uitvoeren voer uit, anders niet
+            #Only execute if the button hasn't been pressed in previous execution
             if BUTTON_1_EXECUTING == False:
                 toggleLamp(True)
                 BUTTON_1_EXECUTING = True
@@ -272,11 +272,11 @@ def getButtonPresses():
 
         PREV_PUMP_STATE = PUMP_ON
         if GPIO.input(BUTTON_2) == 0:
-            #zet pomp aan
+            #Pump on
             PUMP_ON = True
             GPIO.output(19,GPIO.LOW)
         else:
-            #zet pomp uit
+            #Pump off
             PUMP_ON = False
             GPIO.output(19,GPIO.HIGH)
             
@@ -294,7 +294,7 @@ def getButtonPresses():
 
 
         if GPIO.input(BUTTON_3) == 0:
-            #Als knop nog niet is aan het uitvoeren voer uit, anders niet
+            #Only execute if the button hasn't been pressed in previous execution
             if BUTTON_3_EXECUTING == False:
                 motorMove(motor_steps_total * 1/4,True)
                 BUTTON_3_EXECUTING = True
@@ -303,7 +303,7 @@ def getButtonPresses():
 
 
         if GPIO.input(BUTTON_4) == 0:
-            #Als knop nog niet is aan het uitvoeren voer uit, anders niet
+            #Only execute if the button hasn't been pressed in previous execution
             if BUTTON_4_EXECUTING == False:
                 motorMove(motor_steps_total * 1/4,False)
                 BUTTON_4_EXECUTING = True
@@ -325,7 +325,7 @@ try:
     ps_checkbuttons = Process(target = getButtonPresses)
     ps_checkbuttons.start()
 
-    #Om de hoeveel seconden de motor aangaat
+    #Set the timeout for the motor moving (=automatic feeding)
     motor_timeout = 60 * 60 * 12
     motor_now = ""
 

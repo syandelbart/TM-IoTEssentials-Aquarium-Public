@@ -31,24 +31,20 @@
     </h4>
   
     <?php
+        //You have to first create a folder named "webserver" in your home directory with the appropriate permissions
+        $HOME_DIR = "pi";
+
         error_reporting(E_ALL);
         if(isset($_POST['button1'])) {
-            $myfile = fopen("/home/pi/webserver/time", "w") or die("Unable to open file!");
+            //If button one is pressed, create a file with the time at which the lamp should go off
+            $myfile = fopen("/home/$HOME_DIR/webserver/time", "w") or die("Unable to open file!");
             $txt = time() + 60 * 15;
             fwrite($myfile, $txt);
             fclose($myfile);
-
-            
-            // $command = escapeshellcmd('gpio -g write 26 0');
-            // $output = shell_exec($command);
-            // sleep(10);
-            // $command = escapeshellcmd('gpio -g write 26 1');
-            // $output = shell_exec($command);
-            // echo "<pre>$output</pre>";
         }
         if(isset($_POST['button2'])) {
-            if(is_writable("/home/pi/webserver/time")) {
-                unlink("/home/pi/webserver/time");
+            if(is_writable("/home/$HOME_DIR/webserver/time")) {
+                unlink("/home/$HOME_DIR/webserver/time");
             }
 
 
