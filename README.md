@@ -4,7 +4,7 @@ This project was made for the course "IoT Essentials" at Thomas More. The purpos
 
 ## The code
 The code isn't perfectly optimized. The idea was to keep it readable but functional as well. The [complete code](https://github.com/syandelbart/TM-IoTEssentials-Aquarium-Public/blob/39d13a232f90d73d33709c2a4207e6071885a97d/final.py) can be found on GitHub.
-```js
+```python
 ps_checkbuttons = Process(target = getButtonPresses)
 ps_checkbuttons.start()
 
