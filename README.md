@@ -38,3 +38,6 @@ The most important part is the main code. This code will first create a new proc
 | Phone control  | 2
 | Nice physical setup  | 2
 | **Total** | **20**
+
+## Ending note
+This project made me learn more about GPIO, and how to combine multiple components in one functional program. For future projects however, I would prefer an I2C stepper motor, as that is way easier to manage. Same goes for the LCD, which in this case was a simple display also used in (old,brick-like) Nokia phones. Currently the buttons each have their own input pin, but for the future a button matrix might be better, as right now the RPi inputs were filled almost entirely... :) 
